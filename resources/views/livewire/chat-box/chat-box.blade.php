@@ -34,6 +34,7 @@
         @endforeach
     </div>
     <div>
+        <!-- ?\calling the ask method when the user types somthing -->
         <form wire:submit.prevent="ask">
             <label for="chat" class="sr-only">Your message</label>
             <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
@@ -78,10 +79,10 @@
             <select wire:model.defer="chatBoxModel"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option>Choose an OpenAI Model</option>
-                @foreach ($availableGPTModels as $chatBoxModelKey => $chatBoxModelValue)
+                {{-- @foreach ($availableGPTModels as $chatBoxModelKey => $chatBoxModelValue)
                     <option {{ $chatBoxModelKey == $chatBoxModel ? 'selected' : '' }} value="{{ $chatBoxModelKey }}">
                         {{ $chatBoxModelValue }}</option>
-                @endforeach
+                @endforeach --}}
             </select>
         </div>
         <div>
@@ -98,16 +99,16 @@
             <div data-popover id="popover-default" role="tooltip"
                 class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
 
-                <div class="px-3 py-2">
+                <!-- <div class="px-3 py-2">
                     <p>Using prompt from https://github.com/f/awesome-chatgpt-prompts</p>
-                </div>
+                </div> -->
                 <div data-popper-arrow></div>
             </div>
 
 
         </div>
-        <!-- <div> -->
-            <!-- <label for="chatBoxTemperature"
+        <div>
+            <label for="chatBoxTemperature"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Temperature</label>
             <input wire:model="chatBoxTemperature" type="number" step="0.1" min="0" max="1"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -119,8 +120,8 @@
             <input wire:model="chatBoxMaxTokens" type="number" step="100" min="0" max="4096"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="1 - 4096">
-        </div> -->
-    <!-- </div> -->
+        </div>
+    </div>
     <div class="flex mt-6">
         {{-- Add a save button --}}
         <div>

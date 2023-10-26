@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WordpressController;
 use App\Models\ChatBox;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LLMController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +42,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+Route::get('/chat', [LLMController::class, 'Response']);

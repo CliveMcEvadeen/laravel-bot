@@ -17,7 +17,7 @@ class ChatBox extends Component
 
     public $chatBoxMaxTokens = 600;
 
-    public $chatBoxTemperature = 0.6;
+    public $chatBoxTemperature = 0.7;
 
     public $transactions = [];
 
@@ -25,7 +25,10 @@ class ChatBox extends Component
 
     public $chatBoxRole;
 
-    public $chatBoxModel = 'gpt-3.5-turbo';
+    // public $chatBoxModel = 'gpt-3.5-turbo';
+    public $topK;
+
+    public $topP;
 
     public $totalTokens;
 
@@ -50,6 +53,7 @@ class ChatBox extends Component
                 $this->transactions[] = ['role' => $saved_message['role'], 'content' => $saved_message['content']];
             }
         }
+
     }
 
     public function ask()
@@ -59,16 +63,19 @@ class ChatBox extends Component
         if (! empty($this->message)) {
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
             $response = $this->openAIService->ask(
-                $this->chatBoxModel,
-                $this->chatBoxMaxTokens,
-                $this->chatBoxTemperature,
-                $this->transactions
+                // $this->topP,
+                // $this->chatBoxMaxTokens,
+                // $this->chatBoxTemperature,
+                // $this->topK,
+                // $this->transactions
             );
-            $this->totalTokens = $response->usage->totalTokens;
-            $this->transactions[] = ['role' => 'assistant', 'content' => $response->choices[0]->message->content];
+            // $this->totalTokens = $response->usage->totalTokens;
+            $this->transactions[] = ['role' => 'assistant', 'content' => $response];
+            // ->choices[0]->message->content];
             $this->messages = collect($this->transactions)->reject(fn ($message) => $message['role'] === 'system');
             $this->message = '';
         }
+        return $response;
     }
 
     public function sendChatToEmail()
