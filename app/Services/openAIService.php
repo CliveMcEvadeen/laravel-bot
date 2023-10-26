@@ -5,82 +5,76 @@ namespace App\Services;
 use GuzzleHttp\Client;
 use OpenAI\Laravel\Facades\OpenAI;
 
-class LLM
-{
-    static function OpenAI(){
-
-    }
-}
 
 class openAIService
 {
-    public $response;
-    // public function transcribe($filePath, $language)
-    // {
-    //     $response = OpenAI::audio()->transcribe([
-    //         'model' => 'whisper-1',
-    //         'file' => fopen(storage_path('app/'.$filePath), 'r'),
-    //         'language' => $language,
-    //         'response_format' => 'verbose_json',
-    //     ]);
+//     public $response;
+//     // public function transcribe($filePath, $language)
+//     // {
+//     //     $response = OpenAI::audio()->transcribe([
+//     //         'model' => 'whisper-1',
+//     //         'file' => fopen(storage_path('app/'.$filePath), 'r'),
+//     //         'language' => $language,
+//     //         'response_format' => 'verbose_json',
+//     //     ]);
 
-    //     return $response;
-    // }
-    public function ask(){
+//     //     return $response;
+//     // }
+//     public function ask(){
 
-        // public function makeRequest()
-        // {
-            // Disable SSL certificate verification
+//         // public function makeRequest()
+//         // {
+//             // Disable SSL certificate verification
            
-            $client = new Client(['verify' => true,]);
+//             $client = new Client(['verify' => true,]);
     
-            try {
-                $response = $client->post('https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText', [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                    ],
-                        'query'=>[
-                            "key"=>env('LLM_API_KEY'),
-                        ],
-                    'json' => [
+//             try {
+//                 $response = $client->post('https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText', [
+//                     'headers' => [
+//                         'Content-Type' => 'application/json',
+//                     ],
+//                         'query'=>[
+//                             "key"=>env('LLM_API_KEY'),
+//                         ],
+//                     'json' => [
     
-                        // @PALM params
+//                         // @PALM params
                         
-                        'prompt' =>array('text'=>'what is a computer?'),  
-                        "temperature"=>0.7, 
-                        "candidate_count"=>1,
-                        "maxOutputTokens"=>600, 
-                        "topP"=>10, 
-                        "topK"=>0.1
+//                         'prompt' =>array('text'=>'what is a computer?'),  
+//                         "temperature"=>0.7, 
+//                         "candidate_count"=>1,
+//                         "maxOutputTokens"=>600, 
+//                         "topP"=>10, 
+//                         "topK"=>0.1
     
-                    ],
-                ]);
+//                     ],
+//                 ]);
     
-                $result = json_decode($response->getBody()->getContents(),true);
+//                 $result = json_decode($response->getBody()->getContents(),true);
                
-                $response=explode(".", $result['candidates'][0]['output']);
-                $response="";
-                foreach($response as $statement){
-                    $response.=trim($statement). ".\n";
-                    // echo $this->$response;
-                }
-                return $response;
+//                 $response=explode(".", $result['candidates'][0]['output']);
+//                 $response="";
+//                 foreach($response as $statement){
+//                     $response.=trim($statement). ".\n";
+//                     // echo $this->$response;
+//                 }
+//                 return $response;
     
-            } catch (RequestException $e) {
-                // Handle any request exception here
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-    }
-    // get the response from palm api
-    public function response(Request $request)
-    {
-        //call the chat function;
-        $this->ask();
-        return $response;
-        // return 'hello there';
-    }
+//             } catch (RequestException $e) {
+//                 // Handle any request exception here
+//                 return response()->json(['error' => $e->getMessage()], 500);
+//             }
+//     }
+//     // get the response from palm api
+//     public function response(Request $request)
+//     {
+//         //call the chat function;
+//         $this->ask();
+//         return $response;
+//         // return 'hello there';
+//     }
 
-    public function askgpt($chatBoxModel, $chatBoxMaxTokens, $chatBoxTemperature, $transactions)
+    public function ask($chatBoxModel, $chatBoxMaxTokens, $chatBoxTemperature, $transactions)
     //ask-func_name initial name
     {
         $response = OpenAI::chat()->create([

@@ -6,6 +6,8 @@ use App\Models\ChatBox as ChatBoxModel;
 use App\Services\openAIService;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Http\Controllers\LLMController;
+
 
 class ChatBox extends Component
 {
@@ -55,6 +57,15 @@ class ChatBox extends Component
         }
 
     }
+    // ----------------------------------------
+    // -starting from here
+    // -
+    // -----------------------------------------
+    public function __inst(){
+        $llm=new LLMController();
+        return $llm;
+
+    }
 
     public function ask()
     {
@@ -62,13 +73,15 @@ class ChatBox extends Component
         // If the user has typed something, then asking the ChatGPT API
         if (! empty($this->message)) {
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
-            $response = $this->openAIService->ask(
-                // $this->topP,
-                // $this->chatBoxMaxTokens,
-                // $this->chatBoxTemperature,
-                // $this->topK,
-                // $this->transactions
-            );
+            $response=new LLMController();
+            $response->Response();
+            // $response = $this->openAIService->ask(
+            //     // $this->topP,
+            //     // $this->chatBoxMaxTokens,
+            //     // $this->chatBoxTemperature,
+            //     // $this->topK,
+            //     // $this->transactions
+            // );
             // $this->totalTokens = $response->usage->totalTokens;
             $this->transactions[] = ['role' => 'assistant', 'content' => $response];
             // ->choices[0]->message->content];

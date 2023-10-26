@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 class LLMController extends Controller
 {
     public $LLM_response;
+
     public function makeRequest()
     {
         // Disable SSL certificate verification
@@ -19,9 +20,8 @@ class LLMController extends Controller
         $client = new Client(["verify" => true,]);
 
         try {
-            $instructions=[
+            $instructions=[];
 
-            ];
             $response = $client->post("https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText", [
                 "headers" => [
                     "Content-Type" => "application/json",
@@ -68,8 +68,9 @@ class LLMController extends Controller
     public function view_renderer(){
         //making the response available to the view
         $this->makeRequest();
+        $response = $this->LLM_response;
 
-        return view("", ["LLM_Messages" => "accessed from controller"]);
+        return view("livewire.chat-box.chat-box", ['messages'=> $response]);
     }
 
     // public function sendToAPI(){ 
