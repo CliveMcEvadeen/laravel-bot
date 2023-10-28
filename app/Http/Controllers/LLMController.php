@@ -70,7 +70,7 @@ class LLMController extends Controller
         $this->makeRequest();
         $response = $this->LLM_response;
 
-        return view("livewire.chat-box.chat-box", ['messages'=> $response]);
+        return view("page", ['response'=> $response]);
     }
 
     // public function sendToAPI(){ 
