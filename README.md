@@ -1,1 +1,1 @@
-# git clone with laravel and live wire
+# gpt clone with laravel and Google PalmAPI
