@@ -23,7 +23,7 @@
 
                         @if ($message['role'] === 'assistant')
                             <a href="#" class="font-medium text-gray-900">Your Assistant</a>
-                            {{ $response }}
+                            {{ $message['content'] }}
                         @else
                             <a href="#" class="font-medium text-gray-900">You</a>
                             {{$message}}
@@ -45,7 +45,7 @@
             <label for="chat" class="sr-only">Your message</label>
             <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
                 <textarea wire:model.defer="message" wire:keydown.enter="ask" wire:loading.attr="disabled" id="chat"
-                    rows="6"
+                    rows="5"
                     class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Ask your assistant"></textarea>
 

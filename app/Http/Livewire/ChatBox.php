@@ -61,22 +61,16 @@ class ChatBox extends Component
     // -starting from here
     // -
     // -----------------------------------------
-    // public function __inst(){
-    //     $llm=new LLMController();
-    //     return $llm;
-
-    // }
-
     public function ask()
     {
         $this->transactions[] = ['role' => 'system', 'content' => $this->chatBoxSystemInstruction];
         // If the user has typed something, then asking the ChatGPT API
         $response=new LLMController();
-        if (empty($this->message)) {
+        if (! empty($this->message)) {
             // $this->message[]=$response->Response();
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
             
-            $response->Response();
+            // $response->Response();
             // $response = $this->openAIService->ask(
             //     // $this->topP,
             //     // $this->chatBoxMaxTokens,
@@ -85,12 +79,13 @@ class ChatBox extends Component
             //     // $this->transactions
             // );
             // $this->totalTokens = $response->usage->totalTokens;
-            $this->transactions[] = ['role' => 'assistant', 'content' => $response];
+            $this->transactions[] = ['role' => 'assistant', 'content' => $response->Response()];
             // ->choices[0]->message->content];
             $this->messages = collect($this->transactions)->reject(fn ($message) => $message['role'] === 'system');
             $this->message = '';
         }
-        return $response;
+        // return view('livewire.chat-box.chat-box', ['messages' => $this->messages]);
+        // return $this->messages;
     }
 
     public function sendChatToEmail()
