@@ -13,7 +13,7 @@ class LLMController extends Controller
 {
     public $LLM_response;
 
-    public function makeRequest()
+    public function makeRequest($user_query)
     {
         // Disable SSL certificate verification
        
@@ -31,9 +31,9 @@ class LLMController extends Controller
                     ],
                 "json" => [
 
-                    // @PALM params
+                    // @PALM_API params
                     
-                    "prompt" =>array("text"=>"what is a computer, but expain it thoroughly"),  
+                    "prompt" =>array("text"=>$user_query),  
                     "temperature"=>0.7, 
                     "candidate_count"=>1, 
                     "maxOutputTokens"=>200, 
@@ -49,47 +49,23 @@ class LLMController extends Controller
             $this->LLM_response="";
             foreach($response as $statement){
                 $this->LLM_response.=trim($statement). ".\n";
-                // echo $this->$LLM_response;
             }
-            // return $this->LLM_response;
         } catch (RequestException $e) {
-            // Handle any request exception here
             return response()->json(["error" => $e->getMessage()], 500);
         }
     }
 
-    public function Response()
+    public function Response($query)
     {
-        //call the chat function;
-        $this->makeRequest();
+        $this->makeRequest($query);
         return $this->LLM_response;
-        // return "hello there";
     }
-    public function view_renderer(){
-        //making the response available to the view
+
+    public function view_render(){
         $this->makeRequest();
         $response = $this->LLM_response;
 
         return view("page", ['response'=> $response]);
     }
 
-    // public function sendToAPI(){ 
-        
-    //     // $apiURL=env("FLASK_URL");
-
-    //     // $apiURL = "http://localhost:8000/sendToAPI";
-
-    //     $this->makeRequest($prompt);
-        
-    //     try{
-    //         $data=["text"=>"hello there"];
-    //         $response = Http::post($apiURL, $data);
-    //         $responseBody = $response->json();
-    //         return response()->json($responseBody);
-
-    //     }catch (\Exception $e) {
-    //         return response()->json(["error" => $e->getMessage()], 500);
-    //     }
-
-    // }
 }

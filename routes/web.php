@@ -42,5 +42,5 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-Route::get('/chat', [LLMController::class, 'Response']);
-Route::get('/template', [LLMController::class, 'view_renderer']);
+// Route::get('/chat', [LLMController::class, 'Response']);
+// Route::get('/template', [LLMController::class, 'view_render']);

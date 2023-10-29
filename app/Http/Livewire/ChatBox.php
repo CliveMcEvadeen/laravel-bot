@@ -32,7 +32,7 @@ class ChatBox extends Component
 
     public $topP;
 
-    public $totalTokens;
+    public $totalTokens = 1;
 
     public $showSystemInstruction = false;
 
@@ -57,35 +57,23 @@ class ChatBox extends Component
         }
 
     }
-    // ----------------------------------------
-    // -starting from here
-    // -
-    // -----------------------------------------
+    
     public function ask()
     {
         $this->transactions[] = ['role' => 'system', 'content' => $this->chatBoxSystemInstruction];
-        // If the user has typed something, then asking the ChatGPT API
+
+        //instatiate the LLm controller to handle the user query
+
         $response=new LLMController();
         if (! empty($this->message)) {
-            // $this->message[]=$response->Response();
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
-            
-            // $response->Response();
-            // $response = $this->openAIService->ask(
-            //     // $this->topP,
-            //     // $this->chatBoxMaxTokens,
-            //     // $this->chatBoxTemperature,
-            //     // $this->topK,
-            //     // $this->transactions
-            // );
-            // $this->totalTokens = $response->usage->totalTokens;
-            $this->transactions[] = ['role' => 'assistant', 'content' => $response->Response()];
-            // ->choices[0]->message->content];
+            $totalTokens+=str_word_count($this->message);
+            $response->Response($this->message);
+            $this->transactions[] = ['role' => 'assistant', 'content' => $response->Response($this->message)];
             $this->messages = collect($this->transactions)->reject(fn ($message) => $message['role'] === 'system');
             $this->message = '';
         }
-        // return view('livewire.chat-box.chat-box', ['messages' => $this->messages]);
-        // return $this->messages;
+
     }
 
     public function sendChatToEmail()
@@ -120,6 +108,18 @@ class ChatBox extends Component
         return redirect()->route('chatbox');
     }
 
+    // public function tokens(){
+    //     // token counter
+    //     foreach($this->messages as $tokens){
+    //         if($tokens['role']==="assistant"){
+    //             $string=$tokens["content"];
+    //             $tokens=str_word_count($tokens);
+    //         $totalTokens+=$tokens;
+    //         }
+    //     }
+    //     return $totalTokens;
+    // }
+
     public function saveChat()
     {
         if ($this->messages === []) {
@@ -132,7 +132,7 @@ class ChatBox extends Component
             if ($this->chatbox->exists) {
                 $this->chatbox->update([
                     'messages' => $this->messages,
-                    'total_tokens' => $this->totalTokens,
+                    'total_tokens' => 1,
                 ]);
                 $this->message = '';
                 $this->alert('success', 'Your chat was updated successfully!', [
@@ -141,10 +141,11 @@ class ChatBox extends Component
                     'toast' => true,
                 ]);
             } else {
+
                 $chatBox = new ChatBoxModel();
                 $chatBox->user_id = auth()->user()->id;
                 $chatBox->messages = $this->messages;
-                $chatBox->total_tokens = $this->totalTokens;
+                $chatBox->total_tokens = 1;
                 $chatBox->save();
                 $this->message = '';
                 $this->alert('success', 'Your chat was saved successfully!', [
