@@ -36,7 +36,7 @@ class LLMController extends Controller
                     "prompt" =>array("text"=>"what is a computer, but expain it thoroughly"),  
                     "temperature"=>0.7, 
                     "candidate_count"=>1, 
-                    "maxOutputTokens"=>600, 
+                    "maxOutputTokens"=>300, 
                     "topP"=>0.8, 
                     "topK"=>10
 
@@ -58,7 +58,7 @@ class LLMController extends Controller
         }
     }
 
-    public function Response(Request $request)
+    public function Response()
     {
         //call the chat function;
         $this->makeRequest();

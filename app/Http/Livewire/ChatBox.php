@@ -17,9 +17,9 @@ class ChatBox extends Component
 
     public $message;
 
-    public $chatBoxMaxTokens = 600;
+    // public $chatBoxMaxTokens = 600;
 
-    public $chatBoxTemperature = 0.7;
+    // public $chatBoxTemperature = 0.7;
 
     public $transactions = [];
 

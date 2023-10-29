@@ -18,15 +18,10 @@
                 class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
                 <div class="ml-4">
                     <div class="text-lg">
-                        <!-- {{$response}}
-                        {{ $message['content'] }} -->
-
                         @if ($message['role'] === 'assistant')
                             <a href="#" class="font-medium text-gray-900">Your Assistant</a>
-                            {{ $message['content'] }}
                         @else
                             <a href="#" class="font-medium text-gray-900">You</a>
-                            {{$message}}
                         @endif
                     </div>
                     <div class="mt-1 ">
