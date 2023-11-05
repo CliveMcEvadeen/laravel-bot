@@ -67,7 +67,7 @@ class ChatBox extends Component
         $response=new LLMController();
         if (! empty($this->message)) {
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
-            $totalTokens+=str_word_count($this->message);
+            // $totalTokens+=str_word_count($this->message['content']);
             $response->Response($this->message);
             $this->transactions[] = ['role' => 'assistant', 'content' => $response->Response($this->message)];
             $this->messages = collect($this->transactions)->reject(fn ($message) => $message['role'] === 'system');

@@ -17,7 +17,7 @@
             <div
                 class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
                 <div class="ml-4">
-                    <div class="flex rounded-lg text-lg bg-green-400" >
+                    <div class="text-lg " >
                         @if ($message['role'] === 'assistant')
                             <a href="#" class="font-medium text-gray-900">Your Assistant</a>
                         @else
