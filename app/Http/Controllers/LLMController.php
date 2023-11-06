@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Illuminate\http\JsonResponse;
 use GuzzleHttp\Exception\RequestException;
-
 use Illuminate\Http\Request;
 use App\Models\Chatbox;
 
@@ -16,20 +15,27 @@ class LLMController extends Controller
     public $LLM_response;
 
     public function RetrieveConversation(){
-        // this method helps in handling the coversation context
-        // it fetches the messages from the db and pass it to the llm
-        // authenticate current user
+
+        /*
+        *********************************************************************************************
+        *  ->this method handles coversation context                                               *
+        *  ->it fetches the messages from the db and pass it to the llm                             *
+        *  ->authenticate current user                                                              *
+        *  ->check if true user                                                                     *
+        *  ->Fetch messages from the chatboxes table for a specific user                           *
+        *  ->Handle database connection error                                                      *
+        *********************************************************************************************
+        */
+        
         $user = Auth::user();
         if ($user){
-            // check if true user
+            
             $userId = Auth::id();
             try {
-                // Fetch messages from the chatboxes table for a specific user
                 $messages = ChatBox::where('user_id', $userId)->pluck('messages')->toArray();
 
                 return $messages;
             } catch (\Exception $e) {
-                // Handle database connection error
                 report($e); 
             }
         }
@@ -40,16 +46,19 @@ class LLMController extends Controller
     
     public function makeRequest($user_query)
     {
+        /*
+        *********************************************************************************************
+        *    ->Combine user input, database history, and previous history                           *
+        *   -> Limiting the context window size to the last N turns                                 *
+        *   -> Combine user input, database history, and previous history into a single string      *
+        *   -> Enable SSL certificate verification---ssl{cert}.pem                                  *
+        *********************************************************************************************
+        */
+
         $databaseHistory = $this->RetrieveConversation();
-        // Combine user input, database history, and previous history
         $conversationHistory = array_merge(["$user_query"], $databaseHistory);
-
-         // Limit the context window size to the last N turns
         $conversationHistory = array_slice($conversationHistory, -5, 5);
-
-        // Combine user input, database history, and previous history into a single string
         $modelInput = implode("\n", $conversationHistory);
-        // Enable SSL certificate verification---ssl{cert}.pem
        
         $client = new Client(["verify" => true,]);
 
