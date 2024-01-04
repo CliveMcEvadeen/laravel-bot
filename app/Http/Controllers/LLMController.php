@@ -8,9 +8,12 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use App\Models\ChatBox;
 use Illuminate\Support\Facades\Log;
+use GeminiAPI\Laravel\Facades\Gemini;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class LLMController extends Controller
 {
+    // context handler
     public $LLM_response;
 
     public function retrieveConversation(ChatBox $chatBox)
@@ -31,53 +34,59 @@ class LLMController extends Controller
         }
     }
 
-    public function makeRequest($user_query, Client $client)
+    public function response($query)
     {
-        try {
-            $databaseHistory = $this->retrieveConversation(new ChatBox());
-            $conversationHistory = array_merge([$user_query], $databaseHistory); // Fixing the variable interpolation
-            $conversationHistory = array_slice($conversationHistory, -5, 5);
-            $modelInput = implode("\n", $conversationHistory);
-
-            $response = $client->post("https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generateText", [
-                "headers" => [
-                    "Content-Type" => "application/json",
-                ],
-                "query" => [
-                    "key" => env("GOOGLE_API_KEY"),
-                ],
-                "json" => [
-                    "prompt" => ["text" => $modelInput],
-                    "temperature" => 0.8,
-                    "candidate_count" => 1,
-                    "maxOutputTokens" => 200,
-                    "topP" => 0.8,
-                    "topK" => 10,
-                    "stop_sequences" => ['.'],
-                ],
-            ]);
-
-            $result = json_decode($response->getBody()->getContents(), true);
-
-            $response = explode(".", $result["candidates"][0]["output"]);
-            $this->LLM_response = "";
-            foreach ($response as $statement) {
-                $this->LLM_response .= trim($statement) . ".\n";
-            }
-        } catch (GuzzleException $e) {
-            Log::error("Guzzle RequestException: " . $e->getMessage());
-            return response()->json(["error" => $e->getMessage()], 500);
-        }
+        // request to gemini
+        // return Gemini::generateText($query);
+        $chat = Gemini::startChat();
+        return $chat->sendMessage($query);
     }
 
-    public function response(Request $request, Client $client)
-    {
-        $query = $request->input('query');
-        $this->makeRequest($query, $client);
-        return $this->LLM_response;
+
+
+    // public function response($query)
+    // {
+    //     $chatContext = session('chat_context', []);
+    
+    //     $chat = Gemini::startChat();
+    //     $geminiResponse = $chat->sendMessage($query, $chatContext);
+    //     $chatContext['last_response'] = $geminiResponse;
+    
+    //     // Update the chat context in the session
+    //     session(['chat_context' => $chatContext]);
+    
+    //     return $geminiResponse;
+    // }
+    
+
+    public function textGenWithImage(){
+
+        return Gemini::generateTextUsingImageFile(
+            'image/jpeg',
+            'elephpant.jpg',
+            'Explain what is in the image',
+        );
+
+    }
+
+    public function chat(){
+        $history = [
+            [
+                'message' => 'user query',
+                'role' => 'user',
+            ],
+            [
+                'message' => 'ai message',
+                'role' => 'model',
+            ],
+        ];
+        $chat = Gemini::startChat($history);
+        
+        return $chat->sendMessage($query);
     }
 
     public function viewRender(Request $request, Client $client)
+    // render test scheme
     {
         try {
             $response = $this->response($request, $client);
@@ -86,5 +95,56 @@ class LLMController extends Controller
             Log::error("Error in viewRender: " . $e->getMessage());
             return response()->json(["error" => $e->getMessage()], 500);
         }
+    }
+}
+// ...................................................................................
+class ContextManager
+{
+    // based on database
+    protected $conversationContextModel; // Inject the model for storing context
+
+    public function __construct(ConversationContext $conversationContextModel)
+    {
+        $this->conversationContextModel = $conversationContextModel;
+    }
+
+    public function getContext()
+    {
+        // Retrieve context from database based on user and conversation IDs
+        $context = $this->conversationContextModel::where('user_id', auth()->id())
+                                              ->where('conversation_id', $conversationId)
+                                              ->first();
+        return $context ? $context->context_data : []; // Return context data or empty array if not found
+    }
+
+    public function updateContext($newData)
+    {
+        // Retrieve or create context record in the database
+        $context = $this->conversationContextModel::firstOrCreate([
+            'user_id' => auth()->id(),
+            'conversation_id' => $conversationId,
+        ]);
+
+        // Update context data
+        $context->context_data = array_merge($context->context_data, $newData);
+        $context->save();
+    }
+}
+
+
+class ContextManager
+{
+    // based on sensions
+
+    public function getContext()
+    {
+        return session('context', []); // Retrieve context from session, default to empty array
+    }
+
+    public function updateContext($newData)
+    {
+        $context = $this->getContext();
+        $context = array_merge($context, $newData); // Combine new data with existing context
+        session(['context' => $context]); // Store updated context in session
     }
 }

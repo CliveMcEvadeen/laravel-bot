@@ -6,6 +6,7 @@ use App\Http\Controllers\WordpressController;
 use App\Models\ChatBox;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LLMController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,3 +45,8 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 Route::get('/chat', [LLMController::class, 'Response']);
 Route::get('/template', [LLMController::class, 'view_render']);
+Route::get('/gemini', [LLMController::class, 'geminiClient']);
+
+// // Route::get('/chat', function (SessionInterface $session) {
+//     return app()->call([LLMController::class, 'Response'], compact('session'));
+// });
