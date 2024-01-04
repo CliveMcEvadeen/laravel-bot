@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ChatBox;
 use Illuminate\Support\Facades\Log;
 use GeminiAPI\Laravel\Facades\Gemini;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+// use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class LLMController extends Controller
 {
@@ -34,29 +34,29 @@ class LLMController extends Controller
         }
     }
 
-    public function response($query)
-    {
-        // request to gemini
-        // return Gemini::generateText($query);
-        $chat = Gemini::startChat();
-        return $chat->sendMessage($query);
-    }
-
-
-
     // public function response($query)
     // {
-    //     $chatContext = session('chat_context', []);
-    
+    //     // request to gemini
+    //     // return Gemini::generateText($query);
     //     $chat = Gemini::startChat();
-    //     $geminiResponse = $chat->sendMessage($query, $chatContext);
-    //     $chatContext['last_response'] = $geminiResponse;
-    
-    //     // Update the chat context in the session
-    //     session(['chat_context' => $chatContext]);
-    
-    //     return $geminiResponse;
+    //     return $chat->sendMessage($query);
     // }
+
+
+
+    public function response($query)
+    {
+        $chatContext = session('chat_context', []);
+    
+        $chat = Gemini::startChat();
+        $geminiResponse = $chat->sendMessage($query, $chatContext);
+        $chatContext['last_response'] = $geminiResponse;
+    
+        // Update the chat context in the session
+        session(['chat_context' => $chatContext]);
+    
+        return $geminiResponse;
+    }
     
 
     public function textGenWithImage(){
@@ -97,54 +97,56 @@ class LLMController extends Controller
         }
     }
 }
+
+
 // ...................................................................................
-class ContextManager
-{
-    // based on database
-    protected $conversationContextModel; // Inject the model for storing context
+// class ContextManager
+// {
+//     // based on database
+//     protected $conversationContextModel; // Inject the model for storing context
 
-    public function __construct(ConversationContext $conversationContextModel)
-    {
-        $this->conversationContextModel = $conversationContextModel;
-    }
+//     public function __construct(ConversationContext $conversationContextModel)
+//     {
+//         $this->conversationContextModel = $conversationContextModel;
+//     }
 
-    public function getContext()
-    {
-        // Retrieve context from database based on user and conversation IDs
-        $context = $this->conversationContextModel::where('user_id', auth()->id())
-                                              ->where('conversation_id', $conversationId)
-                                              ->first();
-        return $context ? $context->context_data : []; // Return context data or empty array if not found
-    }
+//     public function getContext()
+//     {
+//         // Retrieve context from database based on user and conversation IDs
+//         $context = $this->conversationContextModel::where('user_id', auth()->id())
+//                                               ->where('conversation_id', $conversationId)
+//                                               ->first();
+//         return $context ? $context->context_data : []; // Return context data or empty array if not found
+//     }
 
-    public function updateContext($newData)
-    {
-        // Retrieve or create context record in the database
-        $context = $this->conversationContextModel::firstOrCreate([
-            'user_id' => auth()->id(),
-            'conversation_id' => $conversationId,
-        ]);
+//     public function updateContext($newData)
+//     {
+//         // Retrieve or create context record in the database
+//         $context = $this->conversationContextModel::firstOrCreate([
+//             'user_id' => auth()->id(),
+//             'conversation_id' => $conversationId,
+//         ]);
 
-        // Update context data
-        $context->context_data = array_merge($context->context_data, $newData);
-        $context->save();
-    }
-}
+//         // Update context data
+//         $context->context_data = array_merge($context->context_data, $newData);
+//         $context->save();
+//     }
+// }
 
 
-class ContextManager
-{
-    // based on sensions
+// class ContextManager
+// {
+//     // based on sensions
 
-    public function getContext()
-    {
-        return session('context', []); // Retrieve context from session, default to empty array
-    }
+//     public function getContext()
+//     {
+//         return session('context', []); // Retrieve context from session, default to empty array
+//     }
 
-    public function updateContext($newData)
-    {
-        $context = $this->getContext();
-        $context = array_merge($context, $newData); // Combine new data with existing context
-        session(['context' => $context]); // Store updated context in session
-    }
-}
+//     public function updateContext($newData)
+//     {
+//         $context = $this->getContext();
+//         $context = array_merge($context, $newData); // Combine new data with existing context
+//         session(['context' => $context]); // Store updated context in session
+//     }
+// }
