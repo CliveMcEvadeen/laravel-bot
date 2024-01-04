@@ -46,27 +46,49 @@ class LLMController extends Controller
 
     public function response($query)
     {
-        $chatContext = session('chat_context', []);
-    
-        $chat = Gemini::startChat();
-        $geminiResponse = $chat->sendMessage($query, $chatContext);
-        $chatContext['last_response'] = $geminiResponse;
-    
-        // Update the chat context in the session
-        session(['chat_context' => $chatContext]);
-    
+        // Initialize session variables if not already set
+        session(['chat_context' => session('chat_context', [])]);
+        session(['user_requests' => session('user_requests', [])]);
+
+        // Retrieve existing context and user requests
+        $llmResponse = session('chat_context');
+        $userRequests = session('user_requests');
+
+        // Prepare history from existing context or create a new array
+        $history = [];
+        if (isset($llmResponse['conversation_history'])) {
+            $history = $llmResponse['conversation_history'];
+        }
+
+        // Add the current user request to the history
+        $history[] = ['message' => $query, 'role' => 'user', 'timestamp' => time()];
+
+        // Actively use context to shape the prompt or guide Gemini's response generation
+        $prompt = "Respond to the user, taking into account the following conversation:\n";
+        foreach ($history as $message) {
+            $prompt .= "- \"" . $message['message'] . "\" (" . $message['role'] . ")\n";
+        }
+
+        // Optimize Gemini usage (check if context continuation is handled internally)
+        if (!isset($chat) || !method_exists($chat, 'continueChat')) {
+            // Assuming Gemini accepts array history
+            $chat = Gemini::startChat($history);
+        } else {
+            $chat->continueChat($query);
+        }
+
+        $geminiResponse = $chat->sendMessage($prompt);
+
+        // Update context with full conversation history and last response
+        $llmResponse['conversation_history'] = $history;
+        $llmResponse['last_response'] = $geminiResponse;
+        session(['chat_context' => $llmResponse]);
+
+        // Update user requests
+        $userRequests[] = $query;
+        session(['user_requests' => $userRequests]);
+
         return $geminiResponse;
-    }
-    
-
-    public function textGenWithImage(){
-
-        return Gemini::generateTextUsingImageFile(
-            'image/jpeg',
-            'elephpant.jpg',
-            'Explain what is in the image',
-        );
-
     }
 
     public function chat(){

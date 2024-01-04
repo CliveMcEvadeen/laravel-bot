@@ -17,26 +17,17 @@ class ChatBox extends Component
 
     public $message;
 
-    // public $chatBoxMaxTokens = 600;
-
-    // public $chatBoxTemperature = 0.7;
-
     public $transactions = [];
 
     public $messages = [];
 
     public $chatBoxRole;
 
-    // public $chatBoxModel = 'gpt-3.5-turbo';
-    public $topK;
-
-    public $topP;
-
     public $totalTokens = 1;
 
     public $showSystemInstruction = false;
 
-    public $chatBoxSystemInstruction = 'You are Chatwire. Answer as concisely as possible.';
+    public $chatBoxSystemInstruction = 'what is the longest river in Africa';
 
     protected $openAIService;
 
@@ -65,6 +56,7 @@ class ChatBox extends Component
         //instatiate the LLm controller to handle the user query
 
         $response=new LLMController();
+        
         if (! empty($this->message)) {
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
             // $totalTokens+=str_word_count($this->message['content']);
