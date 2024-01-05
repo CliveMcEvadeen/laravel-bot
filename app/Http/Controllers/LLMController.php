@@ -44,7 +44,7 @@ class LLMController extends Controller
 
 
 
-    public function response($query)
+    public function response_test($query)
     {
         // Initialize session variables if not already set
         session(['chat_context' => session('chat_context', [])]);
@@ -91,7 +91,7 @@ class LLMController extends Controller
         return $geminiResponse;
     }
 
-    public function chat(){
+    public function response($query){
         $history = [
             [
                 'message' => 'user query',
@@ -102,7 +102,8 @@ class LLMController extends Controller
                 'role' => 'model',
             ],
         ];
-        $chat = Gemini::startChat($history);
+        // chat to be passed as a parameter in the  gemini chat 
+        $chat = Gemini::startChat();
         
         return $chat->sendMessage($query);
     }
