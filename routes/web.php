@@ -46,6 +46,7 @@ require __DIR__.'/auth.php';
 Route::get('/chat', [LLMController::class, 'Response']);
 Route::get('/template', [LLMController::class, 'view_render']);
 Route::get('/gemini', [LLMController::class, 'geminiClient']);
+Route::get('/testdata', [LLMController::class, 'response']);
 
 // // Route::get('/chat', function (SessionInterface $session) {
 //     return app()->call([LLMController::class, 'Response'], compact('session'));

@@ -91,22 +91,30 @@ class LLMController extends Controller
         return $geminiResponse;
     }
 
+    public function addSenssion(){
+        // $sessionId=Session::getId();
+        // $request->session()->put('sessionId', $sessionId);
+
+        $request->session()->put('user_responses', $userResponses);
+        $request->session()->put('gemini_responses', $geminiResponses);
+
+    }
+
+
     public function response($query){
-        $history = [
-            [
-                'message' => 'user query',
-                'role' => 'user',
-            ],
-            [
-                'message' => 'ai message',
-                'role' => 'model',
-            ],
-        ];
-        // chat to be passed as a parameter in the  gemini chat 
         $chat = Gemini::startChat();
-        
+
         return $chat->sendMessage($query);
     }
+    
+    
+
+//     // User responses:
+//     print_r($userResponses);
+
+// // Gemini responses:
+//     print_r($geminiResponses);
+    // }
 
     public function viewRender(Request $request, Client $client)
     // render test scheme
