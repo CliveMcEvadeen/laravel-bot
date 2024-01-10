@@ -9,112 +9,70 @@ use Illuminate\Http\Request;
 use App\Models\ChatBox;
 use Illuminate\Support\Facades\Log;
 use GeminiAPI\Laravel\Facades\Gemini;
-// use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Illuminate\Support\Facades\Session;
 
 class LLMController extends Controller
 {
-    // context handler
-    public $LLM_response;
+    function addToChatHistory($message, $role) {
 
-    public function retrieveConversation(ChatBox $chatBox)
-    {
+    /**
+     * Adds a message to the chat history.
+     *
+     * @param mixed $message The message to be added to the chat history.
+     * @param mixed $role The role of the user who sent the message.
+     * @throws Exception If there was an error retrieving the chat history from the session.
+     * @return void
+     */
+    
         try {
-            $user = Auth::user();
-
-            if ($user) {
-                $userId = Auth::id();
-                $messages = $chatBox->where('user_id', $userId)->pluck('messages')->toArray();
-                return $messages;
-            } else {
-                return [];
+            $chatHistory = Session::get('chat_history', []);
+    
+            if (!is_array($chatHistory)) {
+                throw new Exception("Error retrieving chat history from session.");
             }
-        } catch (\Exception $e) {
-            Log::error("Error in retrieveConversation: " . $e->getMessage());
-            return [];
+    
+            $chatHistory[] = ['message' => $message, 'role' => $role];
+    
+            Session::put('chat_history', $chatHistory);
+        } catch (Exception $e) {
+            throw $e;
         }
     }
 
-    // public function response($query)
-    // {
-    //     // request to gemini
-    //     // return Gemini::generateText($query);
-    //     $chat = Gemini::startChat();
-    //     return $chat->sendMessage($query);
-    // }
 
+    public function response($query) {
 
+            /**
+     * Response to a chat query.
+     *
+     * @param mixed $query The query message to send to the chat.
+     * @throws Exception Error starting chat with Gemini or sending message to Gemini.
+     * @return mixed The response from the chat.
+     */
 
-    public function response_test($query)
-    {
-        // Initialize session variables if not already set
-        session(['chat_context' => session('chat_context', [])]);
-        session(['user_requests' => session('user_requests', [])]);
-
-        // Retrieve existing context and user requests
-        $llmResponse = session('chat_context');
-        $userRequests = session('user_requests');
-
-        // Prepare history from existing context or create a new array
-        $history = [];
-        if (isset($llmResponse['conversation_history'])) {
-            $history = $llmResponse['conversation_history'];
+        try {
+            $chatHistory = Session::get('chat_history', []);
+            $chat = Gemini::startChat($chatHistory);
+    
+            if (!$chat) {
+                throw new Exception("Error starting chat with Gemini.");
+            }
+    
+            $response = $chat->sendMessage($query);
+    
+            if (!$response) {
+                throw new Exception("Error sending message to Gemini.");
+            }
+    
+            $this->addToChatHistory($query, "user");
+            $this->addToChatHistory($response, "model");
+    
+            return $response;
+        } catch (Exception $e) {
+            throw $e;
         }
-
-        // Add the current user request to the history
-        $history[] = ['message' => $query, 'role' => 'user', 'timestamp' => time()];
-
-        // Actively use context to shape the prompt or guide Gemini's response generation
-        $prompt = "Respond to the user, taking into account the following conversation:\n";
-        foreach ($history as $message) {
-            $prompt .= "- \"" . $message['message'] . "\" (" . $message['role'] . ")\n";
-        }
-
-        // Optimize Gemini usage (check if context continuation is handled internally)
-        if (!isset($chat) || !method_exists($chat, 'continueChat')) {
-            // Assuming Gemini accepts array history
-            $chat = Gemini::startChat($history);
-        } else {
-            $chat->continueChat($query);
-        }
-
-        $geminiResponse = $chat->sendMessage($prompt);
-
-        // Update context with full conversation history and last response
-        $llmResponse['conversation_history'] = $history;
-        $llmResponse['last_response'] = $geminiResponse;
-        session(['chat_context' => $llmResponse]);
-
-        // Update user requests
-        $userRequests[] = $query;
-        session(['user_requests' => $userRequests]);
-
-        return $geminiResponse;
-    }
-
-    public function addSenssion(){
-        // $sessionId=Session::getId();
-        // $request->session()->put('sessionId', $sessionId);
-
-        $request->session()->put('user_responses', $userResponses);
-        $request->session()->put('gemini_responses', $geminiResponses);
-
-    }
-
-
-    public function response($query){
-        $chat = Gemini::startChat();
-
-        return $chat->sendMessage($query);
     }
     
-    
-
-//     // User responses:
-//     print_r($userResponses);
-
-// // Gemini responses:
-//     print_r($geminiResponses);
-    // }
 
     public function viewRender(Request $request, Client $client)
     // render test scheme
@@ -129,55 +87,3 @@ class LLMController extends Controller
     }
 }
 
-
-// ...................................................................................
-// class ContextManager
-// {
-//     // based on database
-//     protected $conversationContextModel; // Inject the model for storing context
-
-//     public function __construct(ConversationContext $conversationContextModel)
-//     {
-//         $this->conversationContextModel = $conversationContextModel;
-//     }
-
-//     public function getContext()
-//     {
-//         // Retrieve context from database based on user and conversation IDs
-//         $context = $this->conversationContextModel::where('user_id', auth()->id())
-//                                               ->where('conversation_id', $conversationId)
-//                                               ->first();
-//         return $context ? $context->context_data : []; // Return context data or empty array if not found
-//     }
-
-//     public function updateContext($newData)
-//     {
-//         // Retrieve or create context record in the database
-//         $context = $this->conversationContextModel::firstOrCreate([
-//             'user_id' => auth()->id(),
-//             'conversation_id' => $conversationId,
-//         ]);
-
-//         // Update context data
-//         $context->context_data = array_merge($context->context_data, $newData);
-//         $context->save();
-//     }
-// }
-
-
-// class ContextManager
-// {
-//     // based on sensions
-
-//     public function getContext()
-//     {
-//         return session('context', []); // Retrieve context from session, default to empty array
-//     }
-
-//     public function updateContext($newData)
-//     {
-//         $context = $this->getContext();
-//         $context = array_merge($context, $newData); // Combine new data with existing context
-//         session(['context' => $context]); // Store updated context in session
-//     }
-// }
