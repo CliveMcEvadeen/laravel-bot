@@ -1,17 +1,5 @@
 <div>
-    <button wire:click="$toggle('showSystemInstruction')"
-        class="focus:outline-none text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-900">
-        Initial System Instruction
-    </button>
-
-    @if ($showSystemInstruction)
-        <div class="mt-4">
-            <textarea wire:model.lazy="chatBoxSystemInstruction" rows="2"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Enter Initial System Instruction"></textarea>
-        </div>
-    @endif
-    <div class="flex flex-col space-y-4 p-4">
+    <!-- <div class="flex flex-col space-y-4 p-4">
 
         @foreach ($messages as $message)
             <div
@@ -33,14 +21,14 @@
                 </div>
             </div>
         @endforeach
-    </div>
+    </div> -->
     <div>
         <!-- calling the ask method when the user types somthing -->
         <form wire:submit.prevent="ask">
             <label for="chat" class="sr-only">Your message</label>
             <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
                 <textarea wire:model.defer="message" wire:keydown.enter="ask" wire:loading.attr="disabled" id="chat"
-                    rows="5"
+                    rows="2"
                     class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Ask your assistant"></textarea>
 
@@ -73,76 +61,43 @@
             </div>
         </form>
     </div>
-    <div class="flex mt-2 space-x-4">
-        <div>
-            <label for="chatBoxModel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Model</label>
-            <select wire:model.defer="chatBoxModel"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option>Choose an OpenAI Model</option>
-                {{-- @foreach ($availableGPTModels as $chatBoxModelKey => $chatBoxModelValue)
-                    <option {{ $chatBoxModelKey == $chatBoxModel ? 'selected' : '' }} value="{{ $chatBoxModelKey }}">
-                        {{ $chatBoxModelValue }}</option>
-                @endforeach --}}
-            </select>
-        </div>
-        <div>
-            <label for="promptList" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prompt
-                List</label>
-            <select data-popover-target="popover-default" wire:model="chatBoxRole"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value=''>Choose a Prompt</option>
-                @foreach ($availableGPTRoles as $availableRoleKey => $availableRoleValue)
-                    <option value="{{ $availableRoleValue }}">
-                        Act as {{ $availableRoleKey }}</option>
-                @endforeach
-            </select>
-            <div data-popover id="popover-default" role="tooltip"
-                class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+    <!-- <div class="flex mt-6 space-x-4"> -->
+       
+    <div class="flex mt-1">
 
-                <!-- <div class="px-3 py-2">
-                    <p>Using prompt from https://github.com/f/awesome-chatgpt-prompts</p>
-                </div> -->
-                <div data-popper-arrow></div>
-            </div>
+    {{-- prompt List --}}
 
-
-        </div>
-        <!-- <div>
-            <label for="chatBoxTemperature"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Temperature</label>
-            <input wire:model="chatBoxTemperature" type="number" step="0.1" min="0" max="1"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="0.0 - 1.0">
-        </div>
         <div>
-            <label for="chatBoxMaxTokens"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">MaxTokens</label>
-            <input wire:model="chatBoxMaxTokens" type="number" step="100" min="0" max="4096"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="1 - 4096">
+                <label for="promptList" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                <select data-popover-target="popover-default" wire:model="chatBoxRole"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value=''>Choose a Role</option>
+                    @foreach ($availableGPTRoles as $availableRoleKey => $availableRoleValue)
+                        <option value="{{ $availableRoleValue }}">
+                            Act as {{ $availableRoleKey }}</option>
+                    @endforeach
+                </select>
         </div>
-    </div> -->
-    <div class="flex mt-6">
+
         {{-- Add a save button --}}
         <div>
             <button wire:click="saveChat"
                 class="focus:outline-none text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-900">
-                Save Conversation
+                Save Chat
             </button>
         </div>
-        {{-- Add a send to email button --}}
+        <!-- {{-- Add a send to email button --}}
         <div>
             <button wire:click="sendChatToEmail"
                 class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">
-                Send Conversation to Email
+                Share chat to Email
             </button>
-        </div>
+        </div> -->
         <div>
             {{-- Add a reset button --}}
             <button wire:click="resetChatBox"
                 class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reset
-                Discussion
+                Chat
             </button>
         </div>
     </div>

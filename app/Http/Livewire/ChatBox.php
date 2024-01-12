@@ -156,4 +156,6 @@ class ChatBox extends Component
             'availableGPTRoles' => $this->openAIService->availableGPTRoles(),
         ]);
     }
+
+    
 }

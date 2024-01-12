@@ -16,8 +16,10 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('chatbox')" :active="request()->routeIs('chatbox')">
-                        {{ __('ChatBox') }}
+                        {{ __('StudyBuddy') }}
+                        
                     </x-nav-link>
+                    
                     <!-- <x-nav-link :href="route('wordpress')" :active="request()->routeIs('wordpress')">
                         {{ __('Wordpress') }}
                     </x-nav-link> -->
@@ -84,7 +86,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('chatbox')" :active="request()->routeIs('chatbox')">
-                {{ __('Chat Box') }}
+                {{ __('StudyBuddy') }}
             </x-responsive-nav-link>
             <!-- <x-responsive-nav-link :href="route('wordpress')" :active="request()->routeIs('wordpress')">
                 {{ __('Wordpress') }}
