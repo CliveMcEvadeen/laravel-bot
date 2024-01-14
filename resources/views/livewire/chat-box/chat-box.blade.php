@@ -1,28 +1,29 @@
 <div>
-    <!-- <div class="flex flex-col space-y-4 p-4">
-
-        @foreach ($messages as $message)
-            <div
-                class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
-                <div class="ml-4">
-                    <div class="text-lg " >
-                        @if ($message['role'] === 'assistant')
-                            <a href="#" class="font-medium text-gray-900">Your Assistant</a>
-                        @else
-                            <a href="#" class="font-medium text-gray-900">You</a>
-                        @endif
-                    </div>
-                    <div class="mt-1 ">
-                        <p class="text-gray-600">
-
-                            {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div> -->
+   
     <div>
+    <div class="flex flex-col space-y-4 p-4">
+
+@foreach ($messages as $message)
+    <div
+        class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
+        <div class="ml-4">
+            <div class="text-lg " >
+                @if ($message['role'] === 'assistant')
+                    <a href="#" class="font-medium text-gray-900">Your Assistant</a>
+                @else
+                    <a href="#" class="font-medium text-gray-900">You</a>
+                @endif
+            </div>
+            <div class="mt-1 ">
+                <p class="text-gray-600">
+
+                    {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
+                </p>
+            </div>
+        </div>
+    </div>
+@endforeach
+</div>
         <!-- calling the ask method when the user types somthing -->
         <form wire:submit.prevent="ask">
             <label for="chat" class="sr-only">Your message</label>
