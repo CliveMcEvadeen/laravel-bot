@@ -1,35 +1,34 @@
+  
 <div>
-   
-    <div>
     <div class="flex flex-col space-y-4 p-4">
 
-@foreach ($messages as $message)
-    <div
-        class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
-        <div class="ml-4">
-            <div class="text-lg " >
-                @if ($message['role'] === 'assistant')
-                    <a href="#" class="font-medium text-gray-900">Your Assistant</a>
-                @else
-                    <a href="#" class="font-medium text-gray-900">You</a>
-                @endif
-            </div>
-            <div class="mt-1 ">
-                <p class="text-gray-600">
+        @foreach ($messages as $message)
+            <div
+                class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
+                <div class="ml-4">
+                    <div class="text-lg " >
+                        @if ($message['role'] === 'assistant')
+                            <a href="#" class="font-medium text-gray-900">Your Assistant</a>
+                        @else
+                            <a href="#" class="font-medium text-gray-900">You</a>
+                        @endif
+                    </div>
+                    <div class="mt-1 ">
+                        <p class="text-gray-600">
 
-                    {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
-                </p>
+                            {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div>
+        @endforeach
     </div>
-@endforeach
-</div>
         <!-- calling the ask method when the user types somthing -->
         <form wire:submit.prevent="ask">
             <label for="chat" class="sr-only">Your message</label>
             <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
                 <textarea wire:model.defer="message" wire:keydown.enter="ask" wire:loading.attr="disabled" id="chat"
-                    rows="2"
+                    rows="2" cols="auto"
                     class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Ask your assistant"></textarea>
 

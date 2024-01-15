@@ -157,5 +157,12 @@ class ChatBox extends Component
         ]);
     }
 
+    public function message_render_variable()
+    {
+        return view('livewire.chat-box.message-card', [
+            'messages' => $this->messages,
+        ]);
+    }
+
     
 }

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('StudyBuddy') }}
+            {{ __('Research Hub') }}
         </h2>
     </x-slot>
     <div class="py-12">
@@ -13,16 +13,16 @@
                         <li class="mr-2" role="presentation">
                             <button class="inline-block p-4 border-b-2 rounded-t-lg" id="chat-tab"
                                 data-tabs-target="#chat" type="button" role="tab" aria-controls="chat"
-                                aria-selected="false">Chat</button>
+                                aria-selected="false">Rese Hub 1.1</button>
                         </li>
-                        <li class="mr-2" role="presentation">
+                        <!-- <li class="mr-2" role="presentation">
                             <button
                                 class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
                                 id="transcribe-tab" data-tabs-target="#transcribe" type="button" role="tab"
                                 
                                 aria-controls="transcribe" aria-selected="false"></button>
-                                <!-- add the button between for transcription -->
-                        </li>
+                                add the button between for transcription
+                        </li> -->
                     </ul>
                 </div>
                 <div id="myTabContent">
@@ -30,10 +30,12 @@
                         aria-labelledby="chat-tab">
                         <livewire:chat-box :chatbox="$chatbox" />
                     </div>
-                    <div class="hidden p-4 rounded-lg dark:bg-gray-800" id="transcribe" role="tabpanel"
+                    {{-- commented --}}
+                    {{-- <div class="hidden p-4 rounded-lg dark:bg-gray-800" id="transcribe" role="tabpanel"
                         aria-labelledby="transcribe-tab">
                         <livewire:transcribe-box />
-                    </div>
+                    </div> --}}
+
                 </div>
             </div>
         </div>
