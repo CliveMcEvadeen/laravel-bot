@@ -161,6 +161,8 @@ class ChatBox extends Component
     {
         return view('livewire.chat-box.message-card', [
             'messages' => $this->messages,
+            'availableGPTModels' => $this->openAIService->availableGPTModels(),
+            'availableGPTRoles' => $this->openAIService->availableGPTRoles(),
         ]);
     }
 
