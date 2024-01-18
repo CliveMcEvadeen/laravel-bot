@@ -16,20 +16,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     @stack('styles')
-    @livewire('chat-box')
 
-    <style>
-        .msg-pad{
-            position: sticky;
-            bottom: 0;
-            padding: 10px;
-            text-align: right;
-        }
 
-    </style>
 </head>
 
-<body class="font-sans antialiased" style="background-color:blue;" >
+<body class="font-sans antialiased" style="height:100vh;">
     {{-- <div>
         @include('layouts.message')
     </div> --}}
@@ -45,15 +36,17 @@
             </div>
         </header>
         @endif
-        <div>
-        @include('livewire.chat-box.message-card') 
-        </div>
         <!-- Page Content -->
-        <main class="msg-pad">
+        <main>
             {{ $slot }}
         </main>
 
     </div>
+
+    <div style="margin: 10px 0px;">
+        
+    </div>
+
     @livewireScripts
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />

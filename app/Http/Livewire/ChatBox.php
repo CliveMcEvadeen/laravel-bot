@@ -53,20 +53,20 @@ class ChatBox extends Component
     {
         $this->transactions[] = ['role' => 'system', 'content' => $this->chatBoxSystemInstruction];
 
-        //instatiate the LLm controller to handle the user query
-
-        $response=new LLMController();
-        
-        if (! empty($this->message)) {
+        if (!empty($this->message)) {
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
-            // $totalTokens+=str_word_count($this->message['content']);
-            $response->Response($this->message);
-            $this->transactions[] = ['role' => 'assistant', 'content' => $response->Response($this->message)];
+            $this->emit('startTyping');
+            $response = new LLMController();
+            $assistantResponse = $response->Response($this->message);
+            sleep(1);
+            $this->transactions[] = ['role' => 'assistant', 'content' => $assistantResponse];
+
             $this->messages = collect($this->transactions)->reject(fn ($message) => $message['role'] === 'system');
             $this->message = '';
         }
-
     }
+
+
 
     public function sendChatToEmail()
     {

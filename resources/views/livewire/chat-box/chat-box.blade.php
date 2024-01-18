@@ -1,28 +1,29 @@
-  
 <div>
-    <div class="flex flex-col space-y-4 p-4">
-
-        @foreach ($messages as $message)
-            <div
-                class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
-                <div class="ml-4">
-                    <div class="text-lg " >
-                        @if ($message['role'] === 'assistant')
-                            <a href="#" class="font-medium text-gray-900">Your Assistant</a>
-                        @else
-                            <a href="#" class="font-medium text-gray-900">You</a>
-                        @endif
-                    </div>
-                    <div class="mt-1 ">
-                        <p class="text-gray-600">
-
-                            {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
-                        </p>
+    {{--including the scrollable--}}
+    <div style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
+        <div class="flex flex-col space-y-4 p-4">
+            @foreach ($messages as $message)
+                <div
+                    class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
+                    <div class="ml-4">
+                        <div class="text-lg " >
+                            @if ($message['role'] === 'assistant')
+                                <a href="#" class="font-medium text-gray-900">Your Assistant</a>
+                            @else
+                                <a href="#" class="font-medium text-gray-900">You</a>
+                            @endif
+                        </div>
+                        <div class="mt-1 ">
+                            <p class="text-gray-600">
+                                {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>  
     </div>
+    
         <!-- calling the ask method when the user types somthing -->
         <form wire:submit.prevent="ask">
             <label for="chat" class="sr-only">Your message</label>
@@ -31,7 +32,7 @@
                     rows="2" cols="auto"
                     class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Ask your assistant"></textarea>
-
+ 
                 <button type="submit"
                     class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
                     wire:loading.remove>
