@@ -16,30 +16,46 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     @stack('styles')
+    <style>
+        ::-webkit-scrollbar {
+             width: 10px;
+        }
 
+        ::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 5px grey; 
+                border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+                background: grey; 
+                border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+                background: steelblue; 
+        }
+    </style>
 
 </head>
 
-<body class="font-sans antialiased" style="height:100vh;">
-    {{-- <div>
-        @include('layouts.message')
-    </div> --}}
-
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900" >
+<body class="font-sans antialiased" style="height:100vh; overflow:hidden;">
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')
 
         <!-- Page Heading -->
         @if (isset($header))
-        <header class="bg-white dark:bg-gray-800 shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <header class="bg-white dark:bg-gray-800 shadow" >
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" style="padding-top: 5px; padding-bottom:5px;">
                 {{ $header }}
             </div>
         </header>
         @endif
         <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
+        <div>
+            <main style="padding-top: 10px;">
+                {{ $slot }}
+       
+            </main>
+        </div>
 
     </div>
 
@@ -51,6 +67,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />
     @stack('scripts')
+    
 </body>
 
 </html>

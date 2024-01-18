@@ -57,8 +57,12 @@ class LLMController extends Controller
             if (!$chat) {
                 throw new Exception("Error starting chat with Gemini.");
             }
-    
-            $response = $chat->sendMessage($query);
+            if($query){
+                $response = $chat->sendMessage($query);
+            }else{
+                throw new Exception("provide message to be  sent");
+            }
+            
     
             if (!$response) {
                 throw new Exception("Error sending message to Gemini.");

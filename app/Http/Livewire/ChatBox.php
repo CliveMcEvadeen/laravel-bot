@@ -55,10 +55,10 @@ class ChatBox extends Component
 
         if (!empty($this->message)) {
             $this->transactions[] = ['role' => 'user', 'content' => $this->message];
-            $this->emit('startTyping');
+            // $this->emit('startTyping');
             $response = new LLMController();
             $assistantResponse = $response->Response($this->message);
-            sleep(1);
+            // sleep(1);
             $this->transactions[] = ['role' => 'assistant', 'content' => $assistantResponse];
 
             $this->messages = collect($this->transactions)->reject(fn ($message) => $message['role'] === 'system');

@@ -4,7 +4,7 @@
             {{ __('Research Hub') }}
         </h2>
     </x-slot>
-    <div class="py-12">
+    <div class="py-12" style="padding-top: 5px;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
@@ -13,7 +13,7 @@
                         <li class="mr-2" role="presentation">
                             <button class="inline-block p-4 border-b-2 rounded-t-lg" id="chat-tab"
                                 data-tabs-target="#chat" type="button" role="tab" aria-controls="chat"
-                                aria-selected="false">Rese Hub 1.1</button>
+                                aria-selected="false">Research Hub 1.1</button>
                         </li>
                         <!-- <li class="mr-2" role="presentation">
                             <button
