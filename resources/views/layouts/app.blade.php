@@ -37,7 +37,7 @@
 
 </head>
 
-<body class="font-sans antialiased" style="height:100vh; overflow:hidden;">
+<body class="font-sans antialiased" style="height:100vh; overflow: hidden;">
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')
 

@@ -1,36 +1,30 @@
 <div>
-    {{--including the scrollable--}}
-        <div class="flex flex-col space-y-4 p-4" style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
-            @foreach ($messages as $message)
-            <div class="text-lg " >
-                @if ($message['role'] === 'assistant')
-                <div class="flex items-start gap-2.5">
-                    <div style="background-color:green; border-radius:50px;">Bot</div>
+    <div class="flex flex-col space-y-4 p-4" style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
+        @foreach ($messages as $message)
+            <div class="flex items-start gap-2.5">
+                <div style="background-color: green; border-radius: 50px; padding: 0.5rem; margin-right: 10px; font-weight:bold; color:white;">
+                    @if ($message['role'] === 'assistant')
+                        <span>Bot</span>
+                    @else
+                        <span>You</span>
+                    @endif
                 </div>
 
-                    {{-- <a href="#" class="font-medium text-gray-900">Your Assistant</a> --}}
-                @else
-                <div class="flex items-start gap-2.5">
-                    <div style="background-color:green; border-radius:50px;">You</div>
-                </div>
-                    {{-- <a href="#" class="font-medium text-gray-900">You</a> --}}
-                @endif
-            </div>
-            <!-- msg -->
-                <div
-                    class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
+                <div class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif "
+                    style="margin-right: 10px;">
                     <div class="ml-4">
-                        
-                        <div class="mt-1 ">
-                            
+                        <div class="mt-1">
                             <p class="text-gray-600">
                                 {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
                             </p>
                         </div>
                     </div>
                 </div>
-            @endforeach
-        </div>  
+            </div>
+        @endforeach
+    </div>
+
+
         <div>
         <!-- calling the ask method when the user types somthing -->
         <form wire:submit.prevent="ask">
@@ -39,7 +33,7 @@
                 <textarea wire:model.defer="message" wire:keydown.enter="ask" wire:loading.attr="disabled" id="chat"
                     rows="2"
                     class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Ask your assistant"></textarea>
+                    placeholder="Ask your assistant" style="resize:none; overflow: hidden;"></textarea>
 
                 <button type="submit"
                     class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
